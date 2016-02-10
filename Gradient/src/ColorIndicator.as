@@ -1,6 +1,7 @@
 package  
 {
 	import flash.display.MovieClip;
+	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	/**
@@ -9,8 +10,7 @@ package
 	 */
 	public class ColorIndicator extends MovieClip
 	{
-		//the color that is presented within the colorindicator
-		private var c_CurrentColor:uint;
+		private var c_ColorSquare:Sprite = new Sprite;
 		
 		//boolean that shows if the indicator should be dragged by the user
 		private var c_IsDragging:Boolean = false;
@@ -20,6 +20,11 @@ package
 		
 		//position of the indicators on the x-axis (furthest has the highest position)
 		private var c_Position:int;
+		
+		//the color that is presented within the colorindicator
+		public var c_CurrentColor:uint;
+		
+		public var c_XPosition:int;
 		
 		public function ColorIndicator(color:uint, barWidth:int, barHeight:int, position:int, xPosition:int = -50) 
 		{
@@ -36,16 +41,20 @@ package
 			ChangeColor(color);
 			
 			//define the max position on the x axis
-			c_XMaxPosition = barWidth - 3.5;
+			c_XMaxPosition = barWidth - 5.5;
 			
 			//on initiating of this program, start with 2 indicators on the start & end of the gradientbar
-			if((position == 0 || position == 1) && xPosition == -50) {
-				xPosition = position == 0 ? -3.5 : c_XMaxPosition; 
+			if((position == 0 || position == 2) && xPosition == -50) {
+				xPosition = position == 0 ? -1.5 : c_XMaxPosition;
 			} 
 			
 			//place the indicator to its respective coordinates
 			x = xPosition;
 			y = barHeight;
+			
+			c_XPosition = x + 1.5;
+			
+			addChild(c_ColorSquare);
 			
 			addEventListener(Event.ENTER_FRAME, loop);
 			
@@ -55,10 +64,11 @@ package
 		
 		//change the color which is presented by the indicator
 		private function ChangeColor(color:uint):void {
-			if(color != c_CurrentColor) {
-				graphics.beginFill(color);
-				graphics.drawRect(1, 4, 5, 5);
-				graphics.endFill();
+			if (color != c_CurrentColor) {
+				c_ColorSquare.graphics.clear();
+				c_ColorSquare.graphics.beginFill(color);
+				c_ColorSquare.graphics.drawRect(1, 4, 5, 5);
+				c_ColorSquare.graphics.endFill();
 				
 				c_CurrentColor = color;
 			}
@@ -68,10 +78,14 @@ package
 		private function loop(e:Event):void {
 			if(c_IsDragging) {
 				x += mouseX - 3;
-				if (x < -3.5) 
-					x = -3.5;
+				
+				//constraints to min/max position on x axis
+				if (x < -1.5) 
+					x = -1.5;
 				else if (x > c_XMaxPosition) 
 					x = c_XMaxPosition;
+					
+				c_XPosition = x + 1.5;
 			}
 		}
 		

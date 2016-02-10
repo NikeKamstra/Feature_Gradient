@@ -13,12 +13,11 @@ package
 	 */
 	public class GradientBar extends MovieClip
 	{
-		//for this building phase we start with 2 static color indicators
-		private var c_FirstColorIndicator:ColorIndicator;
-		private var c_SecondColorIndicator:ColorIndicator;
-		
 		//the gradientbar containing the preview of the gradient
 		private var c_InnerGradientBar:InnerGradientBar;
+		
+		//for this building phase we start with 2 static color indicators
+		public var c_ColorIndicators:Vector.<ColorIndicator> = new Vector.<ColorIndicator>(); 
 		
 		public function GradientBar(width:int, height:int, stage:Stage) 
 		{		
@@ -31,22 +30,32 @@ package
 			x = (stage.stageWidth - width) /2;
 			y = (stage.stageHeight - height) / 2;
 			
-			//instantiate the colorindicators with their colors, barwidth/height & position
-			c_FirstColorIndicator = new ColorIndicator(0xFF0000, width, height, 0);
-			c_SecondColorIndicator = new ColorIndicator(0x00FF00, width, height, 1);
+			//instantiate the first colorindicators with their colors, barwidth/height & position
+			for (var i:int = 0; i < 3; i++) 
+			{
+				var color:uint = i == 1 ? 0xFFFF00 : 0xFF0000;
+				var xpos:int = i == 1 ? (width - 4) / 2 : -50;
+				var newColorIndicator:ColorIndicator = new ColorIndicator(color, width, height, i, xpos);
+				c_ColorIndicators.push(newColorIndicator);
+			}
 			
 			//instantiate the previewing gradientbar with barwidth/height
 			c_InnerGradientBar = new InnerGradientBar(width, height);
 			
-			addChild(c_FirstColorIndicator);
-			addChild(c_SecondColorIndicator);
+			for (var j:int = 0; j < c_ColorIndicators.length; j++) 
+			{
+				addChild(c_ColorIndicators[j]);
+			}
+			
 			addChild(c_InnerGradientBar);
 		}
 		
 		//if the user decides to stop dragging outside of the color indicators, this will tell the indicators to stop dragging
 		public function MouseUp(e:MouseEvent):void {
-			c_FirstColorIndicator.StopDragging();
-			c_SecondColorIndicator.StopDragging();
+			for (var i:int = 0; i < c_ColorIndicators.length; i++) 
+			{
+				c_ColorIndicators[i].StopDragging();
+			}
 		}
 		
 	}
