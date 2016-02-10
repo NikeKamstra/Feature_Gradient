@@ -11,8 +11,13 @@ package
 	{
 		//the color that is presented within the colorindicator
 		private var c_CurrentColor:uint;
+		
 		//boolean that shows if the indicator should be dragged by the user
 		private var c_IsDragging:Boolean = false;
+		
+		//the maximum position on the x-axis
+		private var c_XMaxPosition:int;
+		
 		//position of the indicators on the x-axis (furthest has the highest position)
 		private var c_Position:int;
 		
@@ -30,9 +35,12 @@ package
 			//change the color which is presented by the indicator
 			ChangeColor(color);
 			
+			//define the max position on the x axis
+			c_XMaxPosition = barWidth - 3.5;
+			
 			//on initiating of this program, start with 2 indicators on the start & end of the gradientbar
 			if((position == 0 || position == 1) && xPosition == -50) {
-				xPosition = position == 0 ? -3.5 : barWidth - 3.5; 
+				xPosition = position == 0 ? -3.5 : c_XMaxPosition; 
 			} 
 			
 			//place the indicator to its respective coordinates
@@ -60,6 +68,10 @@ package
 		private function loop(e:Event):void {
 			if(c_IsDragging) {
 				x += mouseX - 3;
+				if (x < -3.5) 
+					x = -3.5;
+				else if (x > c_XMaxPosition) 
+					x = c_XMaxPosition;
 			}
 		}
 		
