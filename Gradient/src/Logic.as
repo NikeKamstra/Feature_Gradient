@@ -14,12 +14,26 @@ package
 			
 		}
 		
+		public static function AddNewColorIndicator(ci:ColorIndicator):void {
+			ci.c_Position = c_ColorIndicators.length;
+			c_ColorIndicators.push(ci);
+			var newposition:int;
+			for (var i:int = 0; i < c_ColorIndicators.length; i++) 
+			{
+				if (ci.c_XPosition < c_ColorIndicators[i].c_XPosition) {
+					newposition = i;
+					break;
+				}
+			}
+			AlterColorIndicatorPositions(ci.c_Position, newposition);
+		}
+		
 		public static function AlterColorIndicatorPositions(currentPosition:int, newPosition:int):void {
 			if (currentPosition == newPosition) {
+				trace("oops" + newPosition);
 				return;
 			} else {
 				var newVector:Vector.<ColorIndicator> = new Vector.<ColorIndicator>();
-				trace(currentPosition + " " + newPosition);
 				if (currentPosition < newPosition) {
 					for (var i:int = 0; i < c_ColorIndicators.length; i++) 
 					{
@@ -53,9 +67,20 @@ package
 						newVector.unshift(c_ColorIndicators[l]);
 					}
 				}
-				trace(newVector[0].c_Position + " " + newVector[1].c_Position + " " + newVector[2].c_Position);
+				if (newVector.length == 3) {
+					trace(newVector[0].c_Position + " " + newVector[1].c_Position + " " + newVector[2].c_Position);
+				} else {
+					trace(newVector[0].c_Position + " " + newVector[1].c_Position + " " + newVector[2].c_Position + " " + newVector[3].c_Position);
+				}
 				c_ColorIndicators = newVector;
 			}
+		}
+		
+		public static function RemoveColorIndicatorAtPosition(position:int):void {
+			if(position != c_ColorIndicators.length-1) {
+				AlterColorIndicatorPositions(position, c_ColorIndicators.length - 1);
+			}
+			c_ColorIndicators.pop();
 		}
 	}
 

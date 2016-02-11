@@ -13,7 +13,7 @@ package
 		private var c_ColorSquare:Sprite = new Sprite;
 		
 		//boolean that shows if the indicator should be dragged by the user
-		private var c_IsDragging:Boolean = false;
+		private var c_IsDragging:Boolean = true;
 		
 		//the maximum position on the x-axis
 		private var c_XMaxPosition:int;
@@ -44,8 +44,9 @@ package
 			c_XMaxPosition = barWidth - 5.5;
 			
 			//on initiating of this program, start with 2 indicators on the start & end of the gradientbar
-			if((position == 0 || position == 2) && xPosition == -50) {
+			if((position == 0 || position == 1) && xPosition == -50) {
 				xPosition = position == 0 ? -1.5 : c_XMaxPosition;
+				c_IsDragging = false;
 			} 
 			
 			c_Position = position;
@@ -62,6 +63,7 @@ package
 			
 			addEventListener(MouseEvent.CLICK, SwitchColor);
 			addEventListener(MouseEvent.MOUSE_DOWN, StartDragging);
+			
 		}
 		
 		//change the color which is presented by the indicator
@@ -98,9 +100,10 @@ package
 						newLowerPosition = i;
 					}
 					if (Logic.c_ColorIndicators[Logic.c_ColorIndicators.length-1 - i].x > x) {
-						newHigherPosition = i;
+						newHigherPosition = Logic.c_ColorIndicators.length-1 - i;
 					}
 				}
+				trace(newHigherPosition);
 				if (lowerPosition <= newLowerPosition) {
 					Logic.AlterColorIndicatorPositions(c_Position, newLowerPosition);
 				} else {
@@ -174,6 +177,7 @@ package
 		//just a simple test for now
 		private function SwitchColor(e:MouseEvent):void {
 			ChangeColor(c_CurrentColor == 0x00FF00 ? 0xFF0000 : 0x00FF00);
+			Logic.c_IsBeingEdited = true;
 		}
 		
 		public function StopDragging():void {
