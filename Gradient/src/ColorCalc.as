@@ -21,11 +21,11 @@ package
 			var g2:uint = ((color2 >> 8) & 0xFF);
 			var b1:uint = (color1 & 0xFF);
 			var b2:uint = (color2 & 0xFF);
-			trace((g2 - g1) / distance);
+
 			RGBChanges[0] = (r2 - r1) / distance;
 			RGBChanges[1] = (g2 - g1) / distance;
 			RGBChanges[2] = (b2 - b1) / distance;
-			trace("red: " + RGBChanges[0] + " green: " + RGBChanges[1] + " blue: " + RGBChanges[2]);
+
 			return RGBChanges;
 		}
 		

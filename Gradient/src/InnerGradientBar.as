@@ -1,6 +1,7 @@
 package  
 {
 	import flash.display.MovieClip;
+	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.ui.Mouse;
 
@@ -28,7 +29,7 @@ package
 			x = 2;
 			y = 2;
 			
-			addEventListener(MouseEvent.CLICK, FillGradientBar);
+			addEventListener(Event.ENTER_FRAME, loop);
 		}
 		
 		private function DrawGradient(gd:GradientData):void {
@@ -41,13 +42,13 @@ package
 			}
 		}
 		
-		private function FillGradientBar(e:MouseEvent):void {
-			var colorIndicators:Vector.<ColorIndicator> = (parent as GradientBar).c_ColorIndicators;
+		private function FillGradientBar():void {
 			var gradientData:Vector.<GradientData> = new Vector.<GradientData>();
-			for (var i:int = 0; i < colorIndicators.length; i++) 
+			
+			for (var i:int = 0; i < Logic.c_ColorIndicators.length; i++) 
 			{
-				if (i != colorIndicators.length - 1) {
-					gradientData.push(new GradientData(colorIndicators[i].c_CurrentColor, colorIndicators[i + 1].c_CurrentColor, colorIndicators[i].c_XPosition, colorIndicators[i + 1].c_XPosition));
+				if (i != Logic.c_ColorIndicators.length - 1) {
+					gradientData.push(new GradientData(Logic.c_ColorIndicators[i].c_CurrentColor, Logic.c_ColorIndicators[i + 1].c_CurrentColor, Logic.c_ColorIndicators[i].c_XPosition, Logic.c_ColorIndicators[i + 1].c_XPosition));
 				}
 			}
 			
@@ -56,6 +57,13 @@ package
 			for (var j:int = 0; j < gradientData.length; j++) 
 			{
 				DrawGradient(gradientData[j]);
+			}
+		}
+		
+		private function loop(e:Event):void {
+			if (Logic.c_IsBeingEdited) {
+				FillGradientBar();
+				Logic.c_IsBeingEdited = false;
 			}
 		}
 	}
